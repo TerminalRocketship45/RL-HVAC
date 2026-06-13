@@ -1,0 +1,22 @@
+name: rlhvac-citylearn
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      # CityLearn runtime dependencies (installed explicitly because CityLearn 2.3.1
+      # hard-requires openstudio<=3.3.0 which is unavailable on PyPI; openstudio is
+      # only used in the end_use_load_profiles sub-module, not CityLearnEnv itself).
+      - doe-xstock>=1.1.0
+      - gymnasium
+      - "numpy<2.0.0"
+      - pandas
+      - pyyaml
+      - "scikit-learn<=1.2.2"
+      - simplejson
+      - torch
+      - torchvision
+      - nrel-pysam
+      - -e ..[dev]
+      # After env creation run:
+      #   conda run -n rlhvac-citylearn pip install "CityLearn==2.3.1" --no-deps
