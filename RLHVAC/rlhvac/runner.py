@@ -29,7 +29,7 @@ def _run_baseline(run_dir: Path, job) -> None:
         step += 1
         done = term or trunc
     summary = adapter.summarize(episode)
-    run_store.append_metric(run_dir, {"kind": "summary", **summary})
+    run_store.append_metric(run_dir, {**summary, "kind": "summary"})
 
 
 def run(run_dir: Path) -> None:
