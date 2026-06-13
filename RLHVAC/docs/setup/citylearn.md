@@ -2,6 +2,18 @@
 
 CityLearn runs in its own conda env (dependency isolation from the UI env).
 
+> **Important:** plain `conda env create -f envs/environment-citylearn.yml` is NOT
+> sufficient — it installs CityLearn's dependencies only. CityLearn itself must be
+> installed separately with `--no-deps` (see below).
+
+## Canonical setup (PowerShell)
+
+```powershell
+pwsh envs/setup-citylearn.ps1
+```
+
+## Manual fallback (non-PowerShell / cross-platform)
+
 ```bash
 conda env create -f envs/environment-citylearn.yml
 conda run -n rlhvac-citylearn pip install "CityLearn==2.3.1" --no-deps

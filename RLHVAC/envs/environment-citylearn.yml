@@ -1,3 +1,7 @@
+# NOTE: This file installs CityLearn's DEPENDENCIES ONLY. CityLearn itself must be
+# installed --no-deps (openstudio<=3.3.0 pin is unsatisfiable on PyPI for py3.11).
+# Do NOT run `conda env create` directly — run the canonical setup instead:
+#     pwsh envs/setup-citylearn.ps1      (or the two commands in docs/setup/citylearn.md)
 name: rlhvac-citylearn
 channels: [conda-forge]
 dependencies:

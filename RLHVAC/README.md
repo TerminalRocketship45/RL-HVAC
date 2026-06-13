@@ -26,7 +26,12 @@ conda run -n rlhvac-ui pytest -v
 ## Phase 1: CityLearn
 
 CityLearn (multi-building demand response) runs in the `rlhvac-citylearn` env.
-See `docs/setup/citylearn.md`. The UI spawns its runner in that env via conda run.
+Use the canonical setup script — plain `conda env create` is NOT sufficient:
+```powershell
+pwsh envs/setup-citylearn.ps1
+```
+See `docs/setup/citylearn.md` for details and a non-PowerShell fallback.
+The UI spawns its runner in that env via conda run.
 
 ## Architecture
 See `docs/superpowers/specs/2026-06-13-rlhvac-simulator-ui-design.md`.
