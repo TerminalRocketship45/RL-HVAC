@@ -21,6 +21,14 @@ def coerce_config(manifest: AdapterManifest, raw: dict) -> dict:
     return {f.name: _cast(f, raw[f.name]) for f in manifest.config_schema if f.name in raw}
 
 
+def _bound(value: Any, cast) -> Any:
+    """Coerce a min/max bound to the field's numeric type, leaving None as-is.
+
+    Streamlit's number_input requires value, min_value, and max_value to share
+    one numeric type, so int bounds on a float field (or vice versa) must match."""
+    return None if value is None else cast(value)
+
+
 def render_config_form(st, manifest: AdapterManifest) -> dict:
     """Render Streamlit widgets for each field; return a coerced config dict.
 
@@ -29,10 +37,12 @@ def render_config_form(st, manifest: AdapterManifest) -> dict:
     for f in manifest.config_schema:
         if f.type == "int":
             raw[f.name] = st.number_input(f.label, value=int(f.default), step=1,
-                                          min_value=f.min, max_value=f.max)
+                                          min_value=_bound(f.min, int),
+                                          max_value=_bound(f.max, int))
         elif f.type == "number":
             raw[f.name] = st.number_input(f.label, value=float(f.default),
-                                          min_value=f.min, max_value=f.max)
+                                          min_value=_bound(f.min, float),
+                                          max_value=_bound(f.max, float))
         elif f.type == "bool":
             raw[f.name] = st.checkbox(f.label, value=bool(f.default))
         elif f.type == "select":
