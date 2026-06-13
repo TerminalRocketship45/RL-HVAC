@@ -34,9 +34,9 @@ def _run_baseline(run_dir: Path, job) -> None:
 
 def run(run_dir: Path) -> None:
     run_dir = Path(run_dir)
-    job = run_store.read_job(run_dir)
-    run_store.write_status(run_dir, RunStatus(state="running", pid=os.getpid()))
     try:
+        job = run_store.read_job(run_dir)
+        run_store.write_status(run_dir, RunStatus(state="running", pid=os.getpid()))
         if job.mode == "baseline":
             _run_baseline(run_dir, job)
         else:
@@ -44,8 +44,12 @@ def run(run_dir: Path) -> None:
         run_store.write_status(run_dir, RunStatus(state="done", progress=1.0, pid=os.getpid()))
     except Exception:
         tb = traceback.format_exc()
-        (run_dir / "logs" / "runner.log").write_text(tb)
-        run_store.write_status(run_dir, RunStatus(state="error", pid=os.getpid(), error=tb[-2000:]))
+        try:
+            (run_dir / "logs").mkdir(parents=True, exist_ok=True)
+            (run_dir / "logs" / "runner.log").write_text(tb)
+            run_store.write_status(run_dir, RunStatus(state="error", pid=os.getpid(), error=tb[-2000:]))
+        except Exception:
+            pass
 
 
 def main() -> None:

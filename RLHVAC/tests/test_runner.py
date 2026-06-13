@@ -33,3 +33,12 @@ def test_runner_records_error_on_bad_sim(tmp_path):
     status = run_store.read_status(run_dir)
     assert status.state == "error"
     assert status.error  # traceback captured
+
+
+def test_runner_records_error_on_corrupt_job(tmp_path):
+    run_dir = run_store.create_run(tmp_path, _job("r4"))
+    (run_dir / "job.json").write_text("{ this is not valid json")
+    runner.run(run_dir)
+    status = run_store.read_status(run_dir)
+    assert status.state == "error"
+    assert status.error
