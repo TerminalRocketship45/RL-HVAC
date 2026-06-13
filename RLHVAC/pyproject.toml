@@ -1,0 +1,24 @@
+[project]
+name = "rlhvac"
+version = "0.0.1"
+description = "Upper-level UI wrapper over building-energy RL simulators"
+requires-python = ">=3.10"
+dependencies = [
+    "gymnasium>=0.29.1",
+    "numpy>=1.26",
+    "streamlit>=1.33",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["rlhvac", "rlhvac.adapters", "rlhvac.ui"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
