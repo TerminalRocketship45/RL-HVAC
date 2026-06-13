@@ -1,6 +1,7 @@
 """CityLearn adapter. Heavy `citylearn` imports happen ONLY inside make()/check()
 so this module is importable in the rlhvac-ui env where citylearn is absent."""
 from __future__ import annotations
+import math
 from typing import Any, Callable
 from rlhvac.spec import AdapterManifest, ConfigField, CheckResult
 
@@ -79,7 +80,7 @@ class CityLearnAdapter:
             district = df[df["level"] == "district"]
             for _, row in district.iterrows():
                 val = row["value"]
-                if val is not None:
+                if val is not None and not (isinstance(val, float) and math.isnan(val)):
                     out[str(row["cost_function"])] = float(val)
         except Exception as exc:  # evaluate() schema can vary by version
             out = {"evaluate_error": str(exc)[:200]}

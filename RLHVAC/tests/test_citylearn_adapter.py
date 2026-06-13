@@ -53,3 +53,5 @@ def test_citylearn_make_and_short_baseline_episode():
     assert steps == 48
     summary = adapter.summarize([])
     assert isinstance(summary, dict) and len(summary) > 0
+    import json
+    assert "NaN" not in json.dumps(summary)  # strict-JSON safe
