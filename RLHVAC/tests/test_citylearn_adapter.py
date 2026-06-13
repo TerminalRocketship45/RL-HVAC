@@ -50,6 +50,6 @@ def test_citylearn_make_and_short_baseline_episode():
         steps += 1
         done = term or trunc
         assert steps <= 60  # guard against runaway
-    assert 1 < steps <= 48
+    assert steps == 48
     summary = adapter.summarize([])
     assert isinstance(summary, dict) and len(summary) > 0

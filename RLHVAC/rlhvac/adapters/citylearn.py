@@ -53,7 +53,7 @@ class CityLearnAdapter:
             schema=scenario,
             central_agent=True,
             simulation_start_time_step=0,
-            simulation_end_time_step=max(1, steps - 1),
+            simulation_end_time_step=max(1, steps),
             random_seed=seed,
         )
         self._citylearn_env = base  # stashed for summarize()
