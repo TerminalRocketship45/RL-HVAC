@@ -10,7 +10,7 @@ from rlhvac.adapters import get_adapter
 
 def _run_baseline(run_dir: Path, job) -> None:
     adapter = get_adapter(job.sim)
-    env = adapter.make(job.config)
+    env = adapter.make({**job.config, "scenario": job.scenario})
     policy = adapter.baseline_policy(env)
     obs, _ = env.reset(seed=job.seed)
     episode: list[dict] = []
