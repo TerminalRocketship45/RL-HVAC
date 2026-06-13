@@ -11,6 +11,7 @@ from rlhvac.spec import AdapterManifest
 REGISTRY: dict[str, tuple[str, str]] = {
     # name: (module, class)
     "mock": ("rlhvac.adapters.mock", "MockAdapter"),
+    "citylearn": ("rlhvac.adapters.citylearn", "CityLearnAdapter"),
 }
 
 
