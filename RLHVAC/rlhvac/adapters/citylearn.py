@@ -43,7 +43,6 @@ class CityLearnAdapter:
                                     " then: conda run -n rlhvac-citylearn pip install 'CityLearn==2.3.1' --no-deps")
 
     def make(self, config: dict):
-        import numpy as np  # noqa: F401
         from citylearn.citylearn import CityLearnEnv
         from citylearn.wrappers import StableBaselines3Wrapper
 
