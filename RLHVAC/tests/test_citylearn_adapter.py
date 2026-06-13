@@ -16,7 +16,7 @@ def test_citylearn_manifest_loads_without_importing_citylearn():
 
 def test_citylearn_module_top_has_no_heavy_import():
     import ast, pathlib
-    src = pathlib.Path("rlhvac/adapters/citylearn.py").read_text()
+    src = (pathlib.Path(__file__).parents[1] / "rlhvac" / "adapters" / "citylearn.py").read_text()
     tree = ast.parse(src)
     top_imports = []
     for node in tree.body:  # module-level only
