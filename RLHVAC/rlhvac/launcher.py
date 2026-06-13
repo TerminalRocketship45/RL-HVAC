@@ -22,5 +22,7 @@ def build_command(run_dir, runner_env: Optional[str]) -> list[str]:
 
 def spawn(run_dir, runner_env: Optional[str]) -> subprocess.Popen:
     cmd = build_command(run_dir, runner_env)
-    log = open(Path(run_dir) / "logs" / "spawn.log", "w")
-    return subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT)
+    log_path = Path(run_dir) / "logs" / "spawn.log"
+    with open(log_path, "w") as log:
+        proc = subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, close_fds=True)
+    return proc
