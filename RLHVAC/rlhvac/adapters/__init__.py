@@ -21,7 +21,10 @@ def get_adapter(name: str):
 
 
 def get_manifest(name: str) -> AdapterManifest:
-    return get_adapter(name).manifest()
+    module_path, class_name = REGISTRY[name]
+    module = importlib.import_module(module_path)
+    cls = getattr(module, class_name)
+    return cls.manifest()
 
 
 def available_sims() -> list[str]:
