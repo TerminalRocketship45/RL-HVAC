@@ -15,14 +15,15 @@ def render_live(st, run_dir: Path) -> None:
     if status.state == "error":
         st.error(status.error or "Run failed")
         return
-    df = metrics_dataframe(run_dir)
-    if df.empty:
+    metrics = run_store.read_metrics(run_dir)
+    step_df = pd.DataFrame([m for m in metrics if m.get("kind") == "step"])
+    if step_df.empty:
         st.info("Waiting for metrics...")
         return
-    if "reward" in df:
-        st.line_chart(df.set_index("step")["reward"])
-    if "temp" in df:
-        st.line_chart(df.set_index("step")["temp"])
-    summary = [m for m in run_store.read_metrics(run_dir) if m.get("kind") == "summary"]
+    if "step" in step_df.columns and "reward" in step_df.columns:
+        st.line_chart(step_df.set_index("step")["reward"])
+    if "step" in step_df.columns and "temp" in step_df.columns:
+        st.line_chart(step_df.set_index("step")["temp"])
+    summary = [m for m in metrics if m.get("kind") == "summary"]
     if summary:
         st.json(summary[-1])
