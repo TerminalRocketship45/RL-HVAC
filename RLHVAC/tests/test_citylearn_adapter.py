@@ -35,6 +35,28 @@ requires_citylearn = pytest.mark.skipif(not citylearn_installed, reason="citylea
 
 
 @requires_citylearn
+def test_citylearn_scene_has_named_buildings():
+    from rlhvac.adapters.citylearn import CityLearnAdapter
+    adapter = CityLearnAdapter()
+    env = adapter.make({"scenario": "baeda_3dem",
+                        "simulation_steps": 4, "seed": 0})
+    env.reset(seed=0)
+    env.step(adapter.baseline_policy(env)(env.observation_space.sample() * 0))
+    scene = adapter.read_scene(env)
+    assert len(scene) >= 1                      # one entry per building
+    first = next(iter(scene.values()))
+    assert "indoor_dry_bulb_temperature" in first
+
+
+def test_citylearn_scene_schema_no_heavy_import():
+    # runs in rlhvac-ui: scene_schema must not import citylearn
+    from rlhvac.adapters import get_adapter
+    schema = get_adapter("citylearn").scene_schema()
+    assert schema.color_by == "indoor_dry_bulb_temperature"
+    assert any(v.name == "indoor_dry_bulb_temperature" for v in schema.variables)
+
+
+@requires_citylearn
 def test_citylearn_make_and_short_baseline_episode():
     import numpy as np
     from rlhvac.adapters.citylearn import CityLearnAdapter
