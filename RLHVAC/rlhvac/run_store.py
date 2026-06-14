@@ -37,8 +37,12 @@ def _ep_name(ep: int) -> str:
     return f"{ep:03d}"
 
 
+def episode_dir(run_dir, ep: int) -> Path:
+    return Path(run_dir) / "episodes" / _ep_name(ep)
+
+
 def create_episode(run_dir, ep: int) -> Path:
-    ep_dir = Path(run_dir) / "episodes" / _ep_name(ep)
+    ep_dir = episode_dir(run_dir, ep)
     ep_dir.mkdir(parents=True, exist_ok=True)
     (ep_dir / "frames.jsonl").touch()
     return ep_dir

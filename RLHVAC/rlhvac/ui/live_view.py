@@ -8,7 +8,7 @@ def latest_episode_frames(run_dir) -> pd.DataFrame:
     eps = run_store.list_episodes(run_dir)
     if not eps:
         return pd.DataFrame()
-    ep_dir = Path(run_dir) / "episodes" / f"{eps[-1]:03d}"
+    ep_dir = run_store.episode_dir(run_dir, eps[-1])
     return pd.DataFrame(run_store.read_frames(ep_dir))
 
 
