@@ -12,3 +12,5 @@ def test_adapter_without_scene_falls_back():
     schema = get_scene_schema("citylearn")
     assert len(schema.units) >= 1
     assert schema.color_by  # non-empty
+    import sys
+    assert "citylearn.citylearn" not in sys.modules

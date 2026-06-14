@@ -1,6 +1,5 @@
 from __future__ import annotations
 import math
-from typing import Optional
 import plotly.graph_objects as go
 from rlhvac.spec import SceneSchema
 

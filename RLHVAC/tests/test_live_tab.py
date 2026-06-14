@@ -10,10 +10,15 @@ def _job(run_id, episodes=1, length=4):
 
 
 def test_list_run_dirs_newest_first(tmp_path):
-    run_store.create_run(tmp_path, _job("a"))
-    run_store.create_run(tmp_path, _job("b"))
+    import os, time
+    a = run_store.create_run(tmp_path, _job("a"))
+    b = run_store.create_run(tmp_path, _job("b"))
+    # force b newer than a
+    now = time.time()
+    os.utime(a, (now - 10, now - 10))
+    os.utime(b, (now, now))
     dirs = list_run_dirs(tmp_path)
-    assert {d.name for d in dirs} == {"a", "b"}
+    assert [d.name for d in dirs] == ["b", "a"]
 
 
 def test_episode_frame_at_returns_named_scene(tmp_path):
