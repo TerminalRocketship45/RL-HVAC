@@ -18,7 +18,7 @@ def test_ui_env_spawns_citylearn_runner(tmp_path):
     proc.wait(timeout=600)  # first run downloads the dataset
     status = run_store.read_status(run_dir)
     assert status.state == "done", f"state={status.state} error={status.error}"
-    steps = [m for m in run_store.read_metrics(run_dir) if m.get("kind") == "step"]
-    assert len(steps) > 1
-    summary = [m for m in run_store.read_metrics(run_dir) if m.get("kind") == "summary"]
-    assert summary and len(summary[-1]) > 1
+    frames = run_store.read_frames(run_dir / "episodes" / "000")
+    assert len(frames) > 1
+    rollup = run_store.read_rollup(run_dir)
+    assert rollup and len(rollup[-1]) > 1
