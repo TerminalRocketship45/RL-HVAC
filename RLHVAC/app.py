@@ -24,11 +24,12 @@ with st.sidebar:
 st.subheader("Configuration")
 config = render_config_form(st, manifest)
 visual = st.checkbox("Stream per-step metrics (visual)", value=True)
+episodes = st.number_input("Episodes", min_value=1, max_value=50, value=1, step=1)
 
 if st.button("Run baseline", type="primary"):
     job = JobSpec(run_id=run_store.new_run_id(), sim=sim, scenario=scenario,
                   config=config, mode="baseline", algo=None, timesteps=0,
-                  seed=7, visual=visual)
+                  seed=7, visual=visual, episodes=int(episodes))
     run_dir = run_store.create_run(RUNS_DIR, job)
     runner_env = None if manifest.runner_env == launcher.UI_ENV else manifest.runner_env
     launcher.spawn(run_dir, runner_env)
