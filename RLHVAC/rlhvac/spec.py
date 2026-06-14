@@ -4,6 +4,31 @@ from dataclasses import dataclass, field, asdict
 from typing import Any, Literal, Optional
 
 FieldType = Literal["number", "int", "bool", "select", "text"]
+VarKind = Literal["temperature", "power", "energy", "soc", "price", "carbon",
+                  "comfort", "count", "setpoint", "other"]
+
+
+@dataclass
+class VarSpec:
+    name: str
+    label: str
+    unit: str = ""
+    kind: VarKind = "other"
+
+
+@dataclass
+class UnitSpec:
+    name: str
+    label: str
+    variables: list[VarSpec] = field(default_factory=list)
+
+
+@dataclass
+class SceneSchema:
+    units: list[UnitSpec]
+    color_by: str
+    color_range: tuple[float, float] = (0.0, 1.0)
+    layout: Literal["grid", "row", "diagram"] = "grid"
 
 
 @dataclass
@@ -44,6 +69,7 @@ class JobSpec:
     timesteps: int
     seed: int
     visual: bool
+    episodes: int = 1
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2)
@@ -59,6 +85,8 @@ class RunStatus:
     progress: float = 0.0
     pid: Optional[int] = None
     error: Optional[str] = None
+    current_episode: int = 0
+    episodes_total: int = 1
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2)

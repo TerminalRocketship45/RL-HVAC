@@ -35,3 +35,30 @@ def test_manifest_holds_config_schema():
 def test_checkresult_shape():
     c = CheckResult(available=False, hint="Install EnergyPlus")
     assert c.available is False and "EnergyPlus" in c.hint
+
+
+def test_scene_schema_dataclasses():
+    from rlhvac.spec import VarSpec, UnitSpec, SceneSchema
+    schema = SceneSchema(
+        units=[UnitSpec(name="z0", label="Zone 0",
+                        variables=[VarSpec(name="temp", label="Temp", unit="C", kind="temperature")])],
+        color_by="temp", color_range=(10.0, 30.0), layout="grid",
+    )
+    assert schema.units[0].variables[0].kind == "temperature"
+    assert schema.color_range == (10.0, 30.0)
+
+
+def test_jobspec_has_episodes_default():
+    from rlhvac.spec import JobSpec
+    import json
+    job = JobSpec(run_id="r", sim="mock", scenario="s", config={}, mode="baseline",
+                  algo=None, timesteps=0, seed=0, visual=True)
+    assert job.episodes == 1
+    restored = JobSpec.from_json(json.loads(job.to_json()))
+    assert restored.episodes == 1
+
+
+def test_runstatus_has_episode_progress_fields():
+    from rlhvac.spec import RunStatus
+    s = RunStatus(state="running", current_episode=2, episodes_total=5)
+    assert s.current_episode == 2 and s.episodes_total == 5
