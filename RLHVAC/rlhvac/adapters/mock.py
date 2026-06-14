@@ -81,13 +81,13 @@ class MockAdapter:
 
     @staticmethod
     def scene_schema() -> SceneSchema:
-        return SceneSchema(
-            units=[UnitSpec(name="zone", label="Zone", variables=[
-                VarSpec(name="temp", label="Temperature", unit="C", kind="temperature"),
-                VarSpec(name="setpoint", label="Setpoint", unit="C", kind="setpoint"),
-            ])],
-            color_by="temp", color_range=(10.0, 30.0), layout="grid",
-        )
+        vars_ = [
+            VarSpec(name="temp", label="Temperature", unit="C", kind="temperature"),
+            VarSpec(name="setpoint", label="Setpoint", unit="C", kind="setpoint"),
+        ]
+        return SceneSchema(color_by="temp", color_range=(10.0, 30.0), layout="grid",
+                           variables=vars_,
+                           units=[UnitSpec(name="zone", label="Zone", variables=vars_)])
 
     def read_scene(self, env) -> dict:
         u = env.unwrapped

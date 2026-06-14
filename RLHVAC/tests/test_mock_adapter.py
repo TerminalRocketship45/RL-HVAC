@@ -35,9 +35,8 @@ def test_mock_scene_schema():
     from rlhvac.adapters import get_adapter
     schema = get_adapter("mock").scene_schema()
     assert schema.color_by == "temp"
-    assert len(schema.units) == 1
-    var_names = {v.name for v in schema.units[0].variables}
-    assert {"temp", "setpoint"}.issubset(var_names)
+    names = {v.name for v in schema.variables}
+    assert {"temp", "setpoint"}.issubset(names)
 
 
 def test_mock_read_scene_after_step():

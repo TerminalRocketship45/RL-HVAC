@@ -25,10 +25,14 @@ class UnitSpec:
 
 @dataclass
 class SceneSchema:
-    units: list[UnitSpec]
     color_by: str
     color_range: tuple[float, float] = (0.0, 1.0)
     layout: Literal["grid", "row", "diagram"] = "grid"
+    variables: list[VarSpec] = field(default_factory=list)
+    units: list[UnitSpec] = field(default_factory=list)
+
+    def variable_meta(self, name: str) -> "VarSpec | None":
+        return next((v for v in self.variables if v.name == name), None)
 
 
 @dataclass

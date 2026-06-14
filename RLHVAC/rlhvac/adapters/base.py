@@ -42,9 +42,10 @@ class SimAdapter(Protocol):
 
 def default_scene_schema() -> SceneSchema:
     return SceneSchema(
+        color_by="reward", color_range=(-10.0, 0.0), layout="grid",
+        variables=[VarSpec(name="reward", label="Reward", kind="other")],
         units=[UnitSpec(name="system", label="System",
                         variables=[VarSpec(name="reward", label="Reward", kind="other")])],
-        color_by="reward", color_range=(-10.0, 0.0), layout="grid",
     )
 
 

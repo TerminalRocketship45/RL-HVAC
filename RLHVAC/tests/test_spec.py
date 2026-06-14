@@ -62,3 +62,12 @@ def test_runstatus_has_episode_progress_fields():
     from rlhvac.spec import RunStatus
     s = RunStatus(state="running", current_episode=2, episodes_total=5)
     assert s.current_episode == 2 and s.episodes_total == 5
+
+
+def test_scene_schema_variable_metadata_lookup():
+    from rlhvac.spec import SceneSchema, VarSpec
+    s = SceneSchema(variables=[VarSpec("temp", "Temperature", "C", "temperature")],
+                    color_by="temp", color_range=(10.0, 30.0))
+    assert s.variable_meta("temp").label == "Temperature"
+    assert s.variable_meta("missing") is None
+    assert s.units == []  # units now optional
