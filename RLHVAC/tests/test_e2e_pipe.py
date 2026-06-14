@@ -11,5 +11,5 @@ def test_spawned_runner_completes(tmp_path):
     proc = launcher.spawn(run_dir, runner_env=None)
     proc.wait(timeout=60)
     assert run_store.read_status(run_dir).state == "done"
-    steps = [m for m in run_store.read_metrics(run_dir) if m.get("kind") == "step"]
-    assert len(steps) == 4
+    frames = run_store.read_frames(run_dir / "episodes" / "000")
+    assert len(frames) == 4
