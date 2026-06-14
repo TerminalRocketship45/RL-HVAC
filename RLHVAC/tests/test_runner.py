@@ -26,6 +26,14 @@ def test_runner_writes_rollup_row_per_episode(tmp_path):
     assert all("total_reward" in r for r in rollup)
 
 
+def test_runner_done_status_reports_final_episode(tmp_path):
+    run_dir = run_store.create_run(tmp_path, _job("rdone", episode_length=2, episodes=3))
+    runner.run(run_dir)
+    status = run_store.read_status(run_dir)
+    assert status.state == "done"
+    assert status.current_episode == 2 and status.episodes_total == 3
+
+
 def test_runner_records_error_on_bad_sim(tmp_path):
     bad = JobSpec(run_id="r3", sim="nope", scenario="x", config={}, mode="baseline",
                   algo=None, timesteps=0, seed=1, visual=True, episodes=1)

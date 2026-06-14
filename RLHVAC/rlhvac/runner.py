@@ -62,6 +62,7 @@ def run(run_dir: Path) -> None:
         else:
             raise NotImplementedError(f"mode '{job.mode}' arrives in a later phase")
         run_store.write_status(run_dir, RunStatus(state="done", progress=1.0, pid=os.getpid(),
+                                                  current_episode=max(0, job.episodes - 1),
                                                   episodes_total=job.episodes))
     except Exception:
         tb = traceback.format_exc()
