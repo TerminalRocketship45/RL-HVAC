@@ -5,3 +5,4 @@ dependencies:
   - pip
   - pip:
       - -e ..[dev]
+      - plotly>=5.18
