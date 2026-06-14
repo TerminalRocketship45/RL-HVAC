@@ -39,11 +39,15 @@ def test_runner_records_error_on_bad_sim(tmp_path):
                   algo=None, timesteps=0, seed=1, visual=True, episodes=1)
     run_dir = run_store.create_run(tmp_path, bad)
     runner.run(run_dir)
-    assert run_store.read_status(run_dir).state == "error"
+    status = run_store.read_status(run_dir)
+    assert status.state == "error"
+    assert status.error
 
 
 def test_runner_records_error_on_corrupt_job(tmp_path):
     run_dir = run_store.create_run(tmp_path, _job("r4"))
     (run_dir / "job.json").write_text("{ not json")
     runner.run(run_dir)
-    assert run_store.read_status(run_dir).state == "error"
+    status = run_store.read_status(run_dir)
+    assert status.state == "error"
+    assert status.error
