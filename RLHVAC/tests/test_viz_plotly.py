@@ -1,20 +1,13 @@
 import math
-from rlhvac.spec import SceneSchema, UnitSpec, VarSpec
+from rlhvac.spec import SceneSchema, VarSpec
 from rlhvac.ui import viz_plotly as viz
 
 
 def _schema():
     return SceneSchema(
-        units=[
-            UnitSpec(name="b0", label="Building 0", variables=[
-                VarSpec("temp", "Temp", "C", "temperature"),
-                VarSpec("load", "Load", "kW", "power")]),
-            UnitSpec(name="b1", label="Building 1", variables=[
-                VarSpec("temp", "Temp", "C", "temperature"),
-                VarSpec("load", "Load", "kW", "power")]),
-        ],
         color_by="temp", color_range=(10.0, 30.0), layout="grid",
-    )
+        variables=[VarSpec("temp", "Temp", "C", "temperature"),
+                   VarSpec("load", "Load", "kW", "power")])
 
 
 def _frame(t0=20.0, t1=25.0):
@@ -35,14 +28,15 @@ def test_heatmap_figure_colors_by_color_by_and_sets_range():
 def test_heatmap_hover_lists_all_variables():
     fig = viz.heatmap_figure(_schema(), _frame())
     text = "".join(str(c) for row in fig.data[0].text for c in row)
-    assert "Temp" in text and "Load" in text and "Building 0" in text
+    assert "Temp" in text and "Load" in text and "b0" in text
 
 
 def test_variable_timeseries_one_trace_per_unit():
     frames = [_frame(20, 25), _frame(21, 26), _frame(22, 27)]
     fig = viz.variable_timeseries(frames, _schema(), "temp")
-    assert len(fig.data) == 2  # b0, b1
-    assert list(fig.data[0].y) == [20, 21, 22]
+    assert len(fig.data) == 2
+    ys = {tuple(tr.y) for tr in fig.data}
+    assert (20, 21, 22) in ys and (25, 26, 27) in ys
 
 
 def test_reward_timeseries():
