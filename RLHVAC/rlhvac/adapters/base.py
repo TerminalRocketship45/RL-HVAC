@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Any, Callable, Protocol, runtime_checkable
 import gymnasium as gym
-from rlhvac.spec import AdapterManifest, CheckResult
+from rlhvac.spec import AdapterManifest, CheckResult, SceneSchema, UnitSpec, VarSpec
 
 
 @runtime_checkable
@@ -29,3 +29,24 @@ class SimAdapter(Protocol):
     def summarize(self, episode: list[dict]) -> dict:
         """Compute sim-specific KPIs from the recorded episode steps."""
         ...
+
+    @staticmethod
+    def scene_schema() -> "SceneSchema":
+        """Static schema describing the per-simulator visual. No heavy import."""
+        ...
+
+    def read_scene(self, env) -> dict:
+        """Per-step {unit_name: {var_name: value}} pulled from live env state."""
+        ...
+
+
+def default_scene_schema() -> SceneSchema:
+    return SceneSchema(
+        units=[UnitSpec(name="system", label="System",
+                        variables=[VarSpec(name="reward", label="Reward", kind="other")])],
+        color_by="reward", color_range=(-10.0, 0.0), layout="grid",
+    )
+
+
+def default_read_scene(reward: float = 0.0) -> dict:
+    return {"system": {"reward": float(reward)}}

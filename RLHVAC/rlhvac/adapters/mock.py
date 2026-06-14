@@ -3,7 +3,7 @@ from typing import Any, Callable
 import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
-from rlhvac.spec import AdapterManifest, ConfigField, CheckResult
+from rlhvac.spec import AdapterManifest, ConfigField, CheckResult, SceneSchema, UnitSpec, VarSpec
 
 
 class _MockEnv(gym.Env):
@@ -78,3 +78,17 @@ class MockAdapter:
             "steps": len(rewards),
             "final_reward": float(rewards[-1]) if rewards else 0.0,
         }
+
+    @staticmethod
+    def scene_schema() -> SceneSchema:
+        return SceneSchema(
+            units=[UnitSpec(name="zone", label="Zone", variables=[
+                VarSpec(name="temp", label="Temperature", unit="C", kind="temperature"),
+                VarSpec(name="setpoint", label="Setpoint", unit="C", kind="setpoint"),
+            ])],
+            color_by="temp", color_range=(10.0, 30.0), layout="grid",
+        )
+
+    def read_scene(self, env) -> dict:
+        u = env.unwrapped
+        return {"zone": {"temp": float(u._temp), "setpoint": float(u.setpoint)}}
