@@ -80,14 +80,16 @@ def reward_timeseries(frames: list[dict]) -> go.Figure:
 
 
 def episode_bar_figure(summary: dict) -> go.Figure:
-    items = [(k, v) for k, v in (summary or {}).items() if isinstance(v, (int, float))]
+    items = [(k, v) for k, v in (summary or {}).items()
+             if isinstance(v, (int, float)) and math.isfinite(v)]
     fig = go.Figure(go.Bar(x=[k for k, _ in items], y=[v for _, v in items]))
     fig.update_layout(title="Episode metrics", margin=dict(l=10, r=10, t=30, b=10))
     return fig
 
 
 def rollup_curve_figure(rollup: list[dict], metric: str = "total_reward") -> go.Figure:
-    rows = [r for r in rollup if metric in r]
+    rows = [r for r in rollup
+            if metric in r and isinstance(r[metric], (int, float)) and math.isfinite(r[metric])]
     fig = go.Figure(go.Scatter(x=[r.get("episode") for r in rows],
                                y=[r.get(metric) for r in rows], mode="lines+markers", name=metric))
     fig.update_layout(title=f"{metric} per episode", xaxis_title="episode",

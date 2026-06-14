@@ -62,3 +62,8 @@ def test_rollup_curve_figure():
     fig = viz.rollup_curve_figure(rollup, "total_reward")
     assert list(fig.data[0].x) == [0, 1]
     assert list(fig.data[0].y) == [-10.0, -8.0]
+
+
+def test_episode_bar_drops_nan():
+    fig = viz.episode_bar_figure({"good": 1.0, "bad": float("nan")})
+    assert list(fig.data[0].x) == ["good"]

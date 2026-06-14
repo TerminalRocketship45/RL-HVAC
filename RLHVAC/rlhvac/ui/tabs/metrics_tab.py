@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 from pathlib import Path
 from rlhvac import run_store
 from rlhvac.ui.tabs.live_tab import list_run_dirs
@@ -10,7 +11,7 @@ def rollup_metric_names(run_dir) -> list[str]:
     keys: list[str] = []
     for row in rollup:
         for k, v in row.items():
-            if k != "episode" and isinstance(v, (int, float)) and k not in keys:
+            if k != "episode" and isinstance(v, (int, float)) and math.isfinite(v) and k not in keys:
                 keys.append(k)
     return keys
 
